@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysPeerMapper">
+    
+    <resultMap type="SysPeer" id="SysPeerResult">
+        <result property="id"    column="id"    />
+        <result property="ip"    column="ip"    />
+        <result property="username"    column="username"    />
+        <result property="env"    column="env"    />
+        <result property="macName"    column="mac_name"    />
+        <result property="maxTask"    column="max_task"    />
+        <result property="isActive"    column="is_active"    />
+        <result property="lastActiveTime"    column="last_active_time"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysPeerVo">
+        select id, ip, username, env, mac_name, max_task, is_active, last_active_time, create_time from sys_peer
+    </sql>
+
+    <select id="selectSysPeerList" parameterType="SysPeer" resultMap="SysPeerResult">
+        <include refid="selectSysPeerVo"/>
+        <where>  
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="env != null  and env != ''"> and env = #{env}</if>
+            <if test="macName != null  and macName != ''"> and mac_name like concat('%', #{macName}, '%')</if>
+            <if test="isActive != null  and isActive != ''"> and is_active = #{isActive}</if>
+            <if test="lastActiveTime != null "> and last_active_time = #{lastActiveTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysPeerById" parameterType="Long" resultMap="SysPeerResult">
+        <include refid="selectSysPeerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysPeer" parameterType="SysPeer">
+        insert into sys_peer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="ip != null and ip != ''">ip,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="env != null">env,</if>
+            <if test="macName != null">mac_name,</if>
+            <if test="maxTask != null">max_task,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="lastActiveTime != null">last_active_time,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="ip != null and ip != ''">#{ip},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="env != null">#{env},</if>
+            <if test="macName != null">#{macName},</if>
+            <if test="maxTask != null">#{maxTask},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="lastActiveTime != null">#{lastActiveTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysPeer" parameterType="SysPeer">
+        update sys_peer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ip != null and ip != ''">ip = #{ip},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="env != null">env = #{env},</if>
+            <if test="macName != null">mac_name = #{macName},</if>
+            <if test="maxTask != null">max_task = #{maxTask},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="lastActiveTime != null">last_active_time = #{lastActiveTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysPeerById" parameterType="Long">
+        delete from sys_peer where id = #{id}
+    </delete>
+
+    <delete id="deleteSysPeerByIds" parameterType="String">
+        delete from sys_peer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
